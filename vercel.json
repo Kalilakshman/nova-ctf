@@ -19,7 +19,7 @@
     },
     {
       "source": "/api/system/debug",
-      "destination": "/api/system/debug/index.html"
+      "destination": "/internal-debug/index.html"
     }
   ]
 }
