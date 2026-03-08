@@ -1,8 +1,21 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/log-scan", "destination": "/api/serverless/log-scan.js" },
-    { "source": "/api/submit-flag", "destination": "/api/serverless/submit-flag.js" },
-    { "source": "/api/get-stats", "destination": "/api/serverless/get-stats.js" }
+    {
+      "source": "/api/log-scan",
+      "destination": "/api/serverless/log-scan.js"
+    },
+    {
+      "source": "/api/submit-flag",
+      "destination": "/api/serverless/submit-flag.js"
+    },
+    {
+      "source": "/api/get-stats",
+      "destination": "/api/serverless/get-stats.js"
+    },
+    {
+      "source": "/api/system",
+      "destination": "/api/serverless/debug-system.js"
+    }
   ]
 }
