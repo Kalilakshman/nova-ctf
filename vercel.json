@@ -16,6 +16,10 @@
     {
       "source": "/api/system",
       "destination": "/api/serverless/debug-system.js"
+    },
+    {
+      "source": "/api/system/debug",
+      "destination": "/api/system/debug/index.html"
     }
   ]
 }
