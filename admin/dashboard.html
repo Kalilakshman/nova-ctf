@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | NovaTech CTF</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            background: #f9f9f9;
+        }
+
+        .solved {
+            background: #e6ffed !important;
+            color: #1e4620;
+            font-weight: 700;
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <span class="logo">NovaTech Admin Dashboard</span>
+                <div>
+                    <span class="live-indicator"></span> <strong>LIVE SCOREBOARD</strong>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <h2>Participant Activity</h2>
+            <p id="last-update">Last updated: Never</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Pages Visited</th>
+                    <th>Attempts</th>
+                    <th>Flag Found</th>
+                    <th>Solve Time</th>
+                </tr>
+            </thead>
+            <tbody id="stats-body">
+                <tr>
+                    <td colspan="5" style="text-align: center;">Waiting for incoming data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        async function updateStats() {
+            try {
+                const res = await fetch('/api/get-stats');
+                const data = await res.json();
+                const tbody = document.getElementById('stats-body');
+                const lastUpdate = document.getElementById('last-update');
+
+                tbody.innerHTML = '';
+
+                if (data.participants.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No active participants.</td></tr>';
+                } else {
+                    data.participants.forEach(p => {
+                        const tr = document.createElement('tr');
+                        if (p.flagFound) tr.className = 'solved';
+
+                        tr.innerHTML = `
+                            <td>${p.ip}</td>
+                            <td>${p.pagesVisited.length}</td>
+                            <td>${p.attempts}</td>
+                            <td>${p.flagFound ? '✅ YES' : '❌ NO'}</td>
+                            <td>${p.solveTime || '--'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                lastUpdate.innerText = `Last updated: ${new Date().toLocaleTimeString()}`;
+            } catch (err) {
+                console.error("Failed to fetch stats");
+            }
+        }
+
+        // Refresh every 5 seconds as requested
+        setInterval(updateStats, 5000);
+        updateStats();
+    </script>
+</body>
+
+</html>

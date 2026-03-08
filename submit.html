@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flag Submission | NovaTech CTF</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">NovaTech Solutions</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/submit.html" class="active">Submit Flag</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Capture The Flag</h1>
+        <p>Enter the discovered flag below to verify your access.</p>
+
+        <div id="response" style="display: none;"></div>
+
+        <form id="flagForm">
+            <div class="form-group">
+                <label for="flag">Flag</label>
+                <input type="text" id="flag" placeholder="FLAG{...}" required>
+            </div>
+            <button type="submit">Validate Flag</button>
+        </form>
+    </main>
+
+    <script>
+        const form = document.getElementById('flagForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const flag = document.getElementById('flag').value;
+
+            try {
+                const res = await fetch('/api/submit-flag', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ flag })
+                });
+                const data = await res.json();
+
+                responseDiv.style.display = 'block';
+                responseDiv.className = data.success ? 'success' : 'alert';
+                responseDiv.innerText = data.message;
+            } catch (err) {
+                responseDiv.style.display = 'block';
+                responseDiv.className = 'alert';
+                responseDiv.innerText = 'Error connecting to validation server.';
+            }
+        });
+    </script>
+    <script src="/assets/js/app.js"></script>
+</body>
+
+</html>

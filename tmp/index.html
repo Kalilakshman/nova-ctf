@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Security Monitor | NovaTech</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+    <div class="container" style="margin-top: 5rem; text-align: center;">
+        <h1 style="color: #cc0000;">⚠️ ACCESS LOGGED</h1>
+        <div class="alert">
+            Security Alert: This directory is monitored. Unauthorized access attempts are logged and reported to the
+            system administrator.
+        </div>
+        <p>Your session ID: <span id="sess-id"></span></p>
+        <p><a href="/">Disconnect Now</a></p>
+    </div>
+    <script>
+        document.getElementById('sess-id').innerText = Math.random().toString(36).substring(7).toUpperCase();
+    </script>
+    <script src="/assets/js/app.js"></script>
+</body>
+
+</html>
