@@ -3,32 +3,131 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Internal Authentication | NovaTech</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal | NovaTech Enterprise</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
 </head>
 
-<body>
-    <div class="container" style="max-width: 400px; margin-top: 5rem;">
-        <h1>Secure Login</h1>
-        <p>Access restricted to Internal NovaTech Employees only.</p>
+<body class="auth-body">
+    <div class="auth-card fade-in" id="login-container">
+        <div class="security-badge">
+            <div class="security-dot"></div>
+            ENCRYPTED
+        </div>
+        <div class="auth-header">
+            <a href="/" class="auth-logo">NovaTech</a>
+            <div class="auth-subtitle">Internal Employee Portal</div>
+        </div>
 
-        <!-- token: YWRtaW46bm92YXRlY2g= -->
-
-        <form>
-            <div class="form-group">
-                <label>Employee ID</label>
-                <input type="text" placeholder="Internal Username">
+        <form id="login-form">
+            <div class="auth-form-group">
+                <label class="auth-label">Employee ID</label>
+                <input type="text" class="auth-input" placeholder="ID-000000" id="emp-id" required>
             </div>
-            <div class="form-group">
-                <label>Access Key</label>
-                <input type="password" placeholder="••••••••">
+            <div class="auth-form-group">
+                <label class="auth-label">Access Passcode</label>
+                <input type="password" class="auth-input" placeholder="••••••••" id="passcode" required>
             </div>
-            <div class="alert">Invalid authentication service configuration. Contact dev-ops.</div>
-            <button type="button">Sign In</button>
+            <button type="submit" class="auth-button">Initialize Session</button>
         </form>
-        <p style="margin-top: 1rem;"><a href="/">Return Home</a></p>
+
+        <div class="auth-footer">
+            Unauthorized access is strictly prohibited. <br>
+            <a href="/" class="auth-link">Return to Public Homepage</a>
+        </div>
     </div>
-    <script src="/assets/js/app.js"></script>
+
+    <!-- 2FA Container (Hidden by default) -->
+    <div class="auth-card hidden" id="tfa-container">
+        <div class="security-badge">
+            <div class="security-dot"></div>
+            MFA ACTIVE
+        </div>
+        <div class="auth-header">
+            <div class="auth-logo">Verification</div>
+            <div class="auth-subtitle">Two-Factor Authentication</div>
+        </div>
+
+        <p style="text-align: center; font-size: 0.9rem; color: var(--auth-text-muted);">
+            Enter the 6-digit code from your <br> security token to continue.
+        </p>
+
+        <div class="otp-container">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+            <input type="text" class="otp-input" maxlength="1" pattern="\d*">
+        </div>
+
+        <button type="button" class="auth-button" id="verify-btn">Verify Identity</button>
+
+        <div class="auth-footer">
+            Did not receive a code? <a href="#" class="auth-link">Contact IT Support</a>
+        </div>
+    </div>
+
+    <!-- Success Container (Hidden by default) -->
+    <div class="auth-card hidden" id="success-container">
+        <div class="auth-header">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <div class="auth-logo">Access Granted</div>
+            <div class="auth-subtitle">Security Session Established</div>
+        </div>
+        <p style="text-align: center; margin-bottom: 2rem;">
+            Welcome back. Dynamic firewall updated for your IP.
+        </p>
+        <button class="auth-button" onclick="window.location.href='../admin/dashboard.html'">Go to Dashboard</button>
+    </div>
+
+    <script src="../assets/js/security.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Authenticating...';
+            btn.disabled = true;
+
+            // Simulate server delay
+            setTimeout(() => {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('tfa-container').classList.remove('hidden');
+                document.getElementById('tfa-container').classList.add('fade-in');
+
+                // Focus first OTP input
+                document.querySelector('.otp-input').focus();
+            }, 1200);
+        });
+
+        // OTP Input Auto-focus Next
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        document.getElementById('verify-btn').addEventListener('click', function () {
+            this.innerText = 'Verifying Protocol...';
+            this.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('tfa-container').classList.add('hidden');
+                document.getElementById('success-container').classList.remove('hidden');
+                document.getElementById('success-container').classList.add('fade-in');
+            }, 1500);
+        });
+    </script>
 </body>
 
 </html>
