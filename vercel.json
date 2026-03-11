@@ -18,8 +18,23 @@
       "destination": "/api/serverless/debug-system.js"
     },
     {
+      "source": "/api/v4/nova-server-status-7f2a",
+      "destination": "/api/serverless/debug-system.js"
+    },
+    {
       "source": "/api/system/debug",
       "destination": "/api-static/debug/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/backup/(.*)",
+      "headers": [
+        {
+          "key": "X-Internal-API-Location",
+          "value": "/api/v4/nova-server-status-7f2a"
+        }
+      ]
     }
   ]
 }

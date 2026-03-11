@@ -10,9 +10,10 @@
     /* 
        INTERNAL_METADATA_IGNORE
        SYSLOG_UUID: 8b23-11ef-930b-0242ac130003
-       API_VERSION_OVERRIDE: 4.2.0
-       REQUIRED_HEADER_FOR_DEBUG: X-NovaTech-Debug: true
+       API_VERSION_OVERRIDE: 5.1.0
+       V5_SIG: "QURWQU5DRURfS0VZXzIwMjY="
     */
+    --v5-sig: "QURWQU5DRURfS0VZXzIwMjY=";
 }
 
 * {

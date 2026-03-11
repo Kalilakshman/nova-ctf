@@ -1,4 +1,4 @@
-User-agent: *
-Disallow: /internal-debug/
-Disallow: /api/serverless/debug-system.js
-# Hint: Secrets are hidden where the machines don't look.
+CRITICAL ERROR: System recovery failed.
+Backup archive available at: /backup/system_v3.tar.gz
+Note: Restoration requires internal API validation.
+# Hint: Follow the breadcrumbs in the network response.

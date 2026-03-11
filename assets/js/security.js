@@ -71,9 +71,13 @@
     window.addEventListener('resize', checkDevTools);
     setInterval(checkDevTools, 2000);
 
-    // 4. Internal Utilities (Legacy)
-    // TODO: Remove this legacy decryption module - Security Risk
-    // The key 'NT_V4_SECURE' should be rotated monthly.
+    // 4. Internal Utilities (Security V5)
+    // The legacy XOR module has been deprecated. Use the new logical shift computation.
+    window.compute_p2 = function() {
+        const _v = [0x41, 0x44, 0x56, 0x41, 0x4e, 0x43, 0x45, 0x44, 0x5f, 0x52, 0x4f, 0x4f, 0x54, 0x7d];
+        return _v.map(c => String.fromCharCode(c)).join('');
+    };
+
     window.nt_decrypt = function(hex, key) {
         let str = '';
         for (let i = 0; i < hex.length; i += 2) {
@@ -84,13 +88,13 @@
 
     // Initial Console Branding
     console.log(
-        "%c NOVATECH ENTERPRISE %c SECURE ENVIRONMENT %c",
+        "%c NOVATECH ENTERPRISE %c PRO SECURE ENVIRONMENT %c",
         "background:#0070f3; color:white; padding:5px; border-radius: 4px 0 0 4px; font-weight:bold;",
-        "background:#222; color:#4ade80; padding:5px; border-radius: 0 4px 4px 0; font-weight:bold;",
+        "background:#222; color:#ff0055; padding:5px; border-radius: 0 4px 4px 0; font-weight:bold;",
         "background:transparent"
     );
 
-    console.log("System initialized. Monitoring active.");
+    console.log("Kernel v5.1.0 initialized. Behavioral monitoring active.");
     console.log("Access restricted to authorized personnel. Session ID: " + Math.random().toString(36).substring(7));
 
 })();

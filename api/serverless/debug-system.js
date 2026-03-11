@@ -1,32 +1,40 @@
-    const debugHeader = req.headers['x-novatech-debug'];
-    const keyHeader = req.headers['x-novatech-key'];
-
-    if (debugHeader !== 'true' || !keyHeader) {
+export default function handler(req, res) {
+    const userAgent = req.headers['user-agent'];
+    const cookies = req.headers['cookie'] || '';
+    
+    // Advanced Validation
+    if (userAgent !== 'NovaBot/4.0-Enterprise' || !cookies.includes('auth_level=admin')) {
         return res.status(403).json({
             status: "error",
-            message: "Permission Denied. Required headers missing.",
-            code: 403
+            message: "Unauthorized Agent. Access restricted to internal crawlers.",
+            code: 403,
+            hint: "Only authorized 'NovaBot' can access this resource."
         });
     }
 
-    const flag = "FLAG{NOVATECH_ROOT_ACCESS}";
-    const key = keyHeader;
+    const keyHeader = req.headers['x-novatech-key'];
+    if (!keyHeader) {
+        return res.status(401).json({
+            status: "error",
+            message: "Encryption Key Required.",
+            hint: "The key is encoded in the primary visual stylesheet."
+        });
+    }
+
+    const flagPart1 = "FLAG{NOVATECH_";
     
-    // XOR Encryption
     const xorEncrypt = (str, key) => {
         return Array.from(str).map((c, i) => 
             (c.charCodeAt(0) ^ key.charCodeAt(i % key.length)).toString(16).padStart(2, '0')
         ).join('');
     };
 
-    const obfuscatedFlag = xorEncrypt(flag, key);
-
     return res.status(200).json({
         status: "active",
-        module: "nova_core_v4",
-        auth_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJzeXN0ZW0iOiJub3ZhdGVjaCJ9.Signature",
-        server_time: new Date().toISOString(),
-        debug: "VERBOSE_ENABLED",
-        payload: obfuscatedFlag,
-        hint: "Data is XOR encoded. The key is hidden in the internal security module."
+        module: "nova_core_v5_pro",
+        data_checksum: "md5:5d41402abc4b2a76b9719d911017c592",
+        payload: xorEncrypt(flagPart1, keyHeader),
+        integrity_check: "PARTIAL_SUCCESS",
+        hint: "Payload contains PART 1. PART 2 is computed via logical shift in security.js."
     });
+}
