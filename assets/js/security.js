@@ -71,6 +71,17 @@
     window.addEventListener('resize', checkDevTools);
     setInterval(checkDevTools, 2000);
 
+    // 4. Internal Utilities (Legacy)
+    // TODO: Remove this legacy decryption module - Security Risk
+    // The key 'NT_V4_SECURE' should be rotated monthly.
+    window.nt_decrypt = function(hex, key) {
+        let str = '';
+        for (let i = 0; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16) ^ key.charCodeAt((i / 2) % key.length));
+        }
+        return str;
+    };
+
     // Initial Console Branding
     console.log(
         "%c NOVATECH ENTERPRISE %c SECURE ENVIRONMENT %c",
@@ -80,5 +91,6 @@
     );
 
     console.log("System initialized. Monitoring active.");
+    console.log("Access restricted to authorized personnel. Session ID: " + Math.random().toString(36).substring(7));
 
 })();
